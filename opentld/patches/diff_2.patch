@@ -1,0 +1,24 @@
+--- src/libopentld/CMakeLists.txt	2012-10-04 15:48:17.953663995 -0400
++++ src/libopentld/CMakeLists_.txt	2012-10-04 15:59:29.733665749 -0400
+@@ -7,7 +7,6 @@
+ link_directories(${OpenCV_LIB_DIR})
+ 
+ add_library(libopentld
+-    imacq/ImAcq.cpp
+     mftracker/BB.cpp
+     mftracker/BBPredict.cpp
+     mftracker/FBTrack.cpp
+@@ -23,7 +22,6 @@
+     tld/TLD.cpp
+     tld/TLDUtil.cpp
+     tld/VarianceFilter.cpp
+-    imacq/ImAcq.h
+     mftracker/BB.h
+     mftracker/BBPredict.h
+     mftracker/FBTrack.h
+@@ -44,5 +42,3 @@
+ 
+ target_link_libraries(libopentld ${OpenCV_LIBS})
+ 
+-set_target_properties(libopentld PROPERTIES OUTPUT_NAME opentld)
+-

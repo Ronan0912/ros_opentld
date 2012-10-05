@@ -1,0 +1,19 @@
+<package>
+  <description brief="opentld">
+
+     OpenTLD is used for tracking objects in video streams.
+
+  </description>
+  <author>Ronan Chauvin</author>
+  <license>GNU</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/opentld</url>
+
+  <export>
+	  <cpp cflags="-I${prefix}/build/git-opentld/src/libopentld -I${prefix}/build/git-opentld/src/3rdparty/cvblobs" 
+		  lflags="-L${prefix}/build/src/libopentld -L${prefix}/build/src/3rdparty/cvblobs"/>
+  </export>
+
+</package>
+
+
