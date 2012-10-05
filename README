@@ -8,7 +8,7 @@ The ROS implementation consists of two nodes : the tracker node which use the op
 
 * `q` quit
 * `b` remember current frame as background model / clear background
-* `c` clear model and stop tracking  git
+* `c` clear model and stop tracking
 * `l` toggle learning
 * `a` toggle alternating mode (if true, detector is switched off when tracker is available)
 * `e` export model
