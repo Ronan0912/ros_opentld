@@ -2,7 +2,7 @@ This is a ROS version of the OpenTLD tracker.
 
 OpenTLD is a C++ implementation of TLD Predator (Tracking. Learning and Detection) implemented by the AIT (Austrian Institute of Technology) that was originally published in MATLAB by Zdenek Kalal. OpenTLD is used for tracking objects in video streams. It doesn't need any training data and is also able to load predefined models (http://gnebehay.github.com/OpenTLD/).
 
-The ROS implementation consists of two nodes : the tracker node which use the opentld library and an interface node that allow you to select a bounding box, start stop the tracking, start and stop the learning, import or export a model, clear the background and change the tracker's methods.
+The ROS implementation consists of two nodes : the tracker node which use the opentld library and an interface node that allow you to select a bounding box, start stop the tracking, start and stop the learning, import or export a model, clear the background and change the tracker's method.
 
 ## Keyboard shortcuts for the interface (same as OpenTLD)
 
