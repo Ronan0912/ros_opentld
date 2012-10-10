@@ -204,7 +204,7 @@ void BaseFrame::export_model()
 	if(!res.isNull())
 	{
 		ros::NodeHandle nh;
-		nh.setParam("/ros_tld_node/modelExportFile", res.toStdString());
+		nh.setParam("/ros_tld_tracker_node/modelExportFile", res.toStdString());
 	}
 	else
 	{
@@ -223,7 +223,7 @@ void BaseFrame::import_model()
 	if(!res.isNull())
 	{
 		ros::NodeHandle nh;
-		nh.setParam("/ros_tld_node/modelImportFile", res.toStdString());
+		nh.setParam("/ros_tld_tracker_node/modelImportFile", res.toStdString());
 	}
 	else
 	{
