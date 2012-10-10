@@ -1,21 +1,21 @@
 /*  Copyright 2012 UdeS University of Sherbrooke
-*
-*   This file is part of ROS_OpenTLD.
-*
-*   ROS_OpenTLD is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*    the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   OpenTLD is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with ROS_OpenTLD. If not, see <http://www.gnu.org/licenses/>.
-*
-*/
+ *
+ *   This file is part of ROS_OpenTLD.
+ *
+ *   ROS_OpenTLD is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   ROS_OpenTLD is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with ROS_OpenTLD. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 /*
  * main.hpp
  *
@@ -45,96 +45,96 @@
 #include <string>
 
 class Main {
-    
-public:
-	Main() {
-		tld = new tld::TLD();
-        
-		state = INIT;
 
-        ros::NodeHandle np("~");
-		np.param("showOutput", showOutput, true);
-		np.param("loadModel", loadModel, false);
-		np.param("autoFaceDetection", autoFaceDetection, false);
-		np.param("exportModelAfterRun", exportModelAfterRun, false);
-		np.param("modelImportFile", modelImportFile, std::string("model"));
-		np.param("modelExportFile", modelExportFile, std::string("model"));
+	public:
+		Main() {
+			tld = new tld::TLD();
 
-		np.param("x", target_bb.x, 100);
-		np.param("y", target_bb.y, 100);
-		np.param("width", target_bb.width, 100);
-		np.param("height", target_bb.height, 100);
-		np.param("correctBB", correctBB, false);
+			state = INIT;
 
-        if(autoFaceDetection)
-            face_cascade_name = "/opt/ros/fuerte/share/OpenCV/haarcascades/haarcascade_frontalface_alt.xml";
+			ros::NodeHandle np("~");
+			np.param("showOutput", showOutput, true);
+			np.param("loadModel", loadModel, false);
+			np.param("autoFaceDetection", autoFaceDetection, false);
+			np.param("exportModelAfterRun", exportModelAfterRun, false);
+			np.param("modelImportFile", modelImportFile, std::string("model"));
+			np.param("modelExportFile", modelExportFile, std::string("model"));
 
-		pub1 = n.advertise<tld_msgs::BoundingBox>("tld_tracked_object", 1000, true);
-        pub2 = n.advertise<std_msgs::Float32>("tld_fps", 1000, true);
-		sub1 = n.subscribe("image_rgb", 1000, &Main::imageReceivedCallback, this);
-		sub2 = n.subscribe("bouding_box", 1000, &Main::targetReceivedCallback, this);
-		sub3 = n.subscribe("cmds", 1000, &Main::cmdReceivedCallback, this);
+			np.param("x", target_bb.x, 100);
+			np.param("y", target_bb.y, 100);
+			np.param("width", target_bb.width, 100);
+			np.param("height", target_bb.height, 100);
+			np.param("correctBB", correctBB, false);
 
-        semaphore.lock();
-	}
+			if(autoFaceDetection)
+				face_cascade_name = "/opt/ros/fuerte/share/OpenCV/haarcascades/haarcascade_frontalface_alt.xml";
 
-	~Main() {
-		delete tld;
-	}
+			pub1 = n.advertise<tld_msgs::BoundingBox>("tld_tracked_object", 1000, true);
+			pub2 = n.advertise<std_msgs::Float32>("tld_fps", 1000, true);
+			sub1 = n.subscribe("image_rgb", 1000, &Main::imageReceivedCallback, this);
+			sub2 = n.subscribe("bouding_box", 1000, &Main::targetReceivedCallback, this);
+			sub3 = n.subscribe("cmds", 1000, &Main::cmdReceivedCallback, this);
 
-	void process();
-    
-private:
-	tld::TLD * tld;
-	bool showOutput;
-	bool exportModelAfterRun;
-	bool loadModel;
-	bool autoFaceDetection;
-	std::string modelImportFile;
-	std::string modelExportFile;
+			semaphore.lock();
+		}
 
-    enum {
-		INIT,
-        TRACKER_INIT,
-        TRACKING
-    } state;
+		~Main() {
+			delete tld;
+		}
 
-	bool correctBB;
-    cv::Rect target_bb;
-    cv::Mat target_image;
+		void process();
 
-	std_msgs::Header img_header;
-    cv::Mat img;
-    cv_bridge::CvImagePtr imgBufferPtr;
-    cv::Mat gray;
-    boost::interprocess::interprocess_mutex mutex;
-    boost::interprocess::interprocess_mutex semaphore;
-	ros::NodeHandle n;
-	ros::Publisher pub1;
-    ros::Publisher pub2;
-	ros::Subscriber sub1;
-	ros::Subscriber sub2;
-	ros::Subscriber sub3;
+	private:
+		tld::TLD * tld;
+		bool showOutput;
+		bool exportModelAfterRun;
+		bool loadModel;
+		bool autoFaceDetection;
+		std::string modelImportFile;
+		std::string modelExportFile;
 
-    std::string face_cascade_name;
-    cv::CascadeClassifier face_cascade;
+		enum {
+			INIT,
+			TRACKER_INIT,
+			TRACKING
+		} state;
 
-    bool newImageReceived();
-	void getLastImageFromBuffer();
-	void imageReceivedCallback(const sensor_msgs::ImageConstPtr & msg);
-    void targetReceivedCallback(const tld_msgs::TargetConstPtr & msg);
-	void cmdReceivedCallback(const std_msgs::CharConstPtr & cmd);
-	void sendObjectTracked(int x, int y, int width, int height, float confidence);
+		bool correctBB;
+		cv::Rect target_bb;
+		cv::Mat target_image;
 
-    void clearBackground();
-    void clearAndStopTracking();
-    void toggleLearning();
-    void alternatingMode();
-    void exportModel();
-    void importModel();
-    void reset();
+		std_msgs::Header img_header;
+		cv::Mat img;
+		cv_bridge::CvImagePtr imgBufferPtr;
+		cv::Mat gray;
+		boost::interprocess::interprocess_mutex mutex;
+		boost::interprocess::interprocess_mutex semaphore;
+		ros::NodeHandle n;
+		ros::Publisher pub1;
+		ros::Publisher pub2;
+		ros::Subscriber sub1;
+		ros::Subscriber sub2;
+		ros::Subscriber sub3;
 
-    cv::Rect faceDetection();
+		std::string face_cascade_name;
+		cv::CascadeClassifier face_cascade;
+
+		bool newImageReceived();
+		void getLastImageFromBuffer();
+		void imageReceivedCallback(const sensor_msgs::ImageConstPtr & msg);
+		void targetReceivedCallback(const tld_msgs::TargetConstPtr & msg);
+		void cmdReceivedCallback(const std_msgs::CharConstPtr & cmd);
+		void sendObjectTracked(int x, int y, int width, int height, float confidence);
+
+		void clearBackground();
+		void clearAndStopTracking();
+		void toggleLearning();
+		void alternatingMode();
+		void exportModel();
+		void importModel();
+		void reset();
+
+		cv::Rect faceDetection();
 };
 
 #endif /* MAIN_HPP_ */

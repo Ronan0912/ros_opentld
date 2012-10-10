@@ -1,21 +1,21 @@
 /*  Copyright 2012 UdeS University of Sherbrooke
-*
-*   This file is part of ROS_OpenTLD.
-*
-*   ROS_OpenTLD is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*    the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   OpenTLD is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with ROS_OpenTLD. If not, see <http://www.gnu.org/licenses/>.
-*
-*/
+ *
+ *   This file is part of ROS_OpenTLD.
+ *
+ *   ROS_OpenTLD is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   ROS_OpenTLD is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with ROS_OpenTLD. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 /*
  * base_frame.cpp
  *
@@ -31,30 +31,30 @@
 #include <QtGui/QFileDialog>
 
 namespace enc = sensor_msgs::image_encodings;
-   
+
 BaseFrame::BaseFrame()
 {   
-    setupUi(this);
+	setupUi(this);
 
-    QObject::connect(this,SIGNAL(sig_image_received(const QImage &)),baseFrameGraphicsView,SLOT(image_received(const QImage &)));    
-    QObject::connect(this,SIGNAL(sig_tracked_object_changed(QRectF)),baseFrameGraphicsView,SLOT(tracked_objet_changed(QRectF)));
-    QObject::connect(this,SIGNAL(sig_fps_tracker_changed(int)),lcd_fps_tracker,SLOT(display(int)));  
-    QObject::connect(this,SIGNAL(sig_confidence_changed(int)),confidence_bar,SLOT(setValue(int)));  
-    QObject::connect(background_reset_button,SIGNAL(clicked()),this,SLOT(clear_background()));
-    QObject::connect(learning_button,SIGNAL(clicked()),this,SLOT(toggle_learning()));      
-    QObject::connect(alternating_button,SIGNAL(clicked()),this,SLOT(alternating_mode()));
-    QObject::connect(stop_tracking_button,SIGNAL(clicked()),this,SLOT(clear_and_stop_tracking()));    
-    QObject::connect(importing_button,SIGNAL(clicked()),this,SLOT(import_model()));
-    QObject::connect(exporting_button,SIGNAL(clicked()),this,SLOT(export_model()));
-    QObject::connect(reset_button,SIGNAL(clicked()),this,SLOT(reset()));
+	QObject::connect(this,SIGNAL(sig_image_received(const QImage &)),baseFrameGraphicsView,SLOT(image_received(const QImage &)));    
+	QObject::connect(this,SIGNAL(sig_tracked_object_changed(QRectF)),baseFrameGraphicsView,SLOT(tracked_objet_changed(QRectF)));
+	QObject::connect(this,SIGNAL(sig_fps_tracker_changed(int)),lcd_fps_tracker,SLOT(display(int)));  
+	QObject::connect(this,SIGNAL(sig_confidence_changed(int)),confidence_bar,SLOT(setValue(int)));  
+	QObject::connect(background_reset_button,SIGNAL(clicked()),this,SLOT(clear_background()));
+	QObject::connect(learning_button,SIGNAL(clicked()),this,SLOT(toggle_learning()));      
+	QObject::connect(alternating_button,SIGNAL(clicked()),this,SLOT(alternating_mode()));
+	QObject::connect(stop_tracking_button,SIGNAL(clicked()),this,SLOT(clear_and_stop_tracking()));    
+	QObject::connect(importing_button,SIGNAL(clicked()),this,SLOT(import_model()));
+	QObject::connect(exporting_button,SIGNAL(clicked()),this,SLOT(export_model()));
+	QObject::connect(reset_button,SIGNAL(clicked()),this,SLOT(reset()));
 
 	sub1 = n.subscribe("image_rgb", 1000, &BaseFrame::image_received_callback, this);
 	sub2 = n.subscribe("tracked_object", 1000, &BaseFrame::tracked_object_callback, this);
 	sub3 = n.subscribe("fps_tracker", 1000, &BaseFrame::fps_tracker_callback, this);
 	pub1 = n.advertise<tld_msgs::Target>("tld_gui_bb", 1000, true);
 	pub2 = n.advertise<std_msgs::Char>("tld_gui_cmds", 1000, true);
-    
-    first_image = true;
+
+	first_image = true;
 }
 
 BaseFrame::~BaseFrame() 
@@ -64,182 +64,182 @@ BaseFrame::~BaseFrame()
 
 void BaseFrame::keyPressEvent(QKeyEvent * event)
 {
-    switch (event->key()) 
-    {
-        case Qt::Key_Return:
-        case Qt::Key_Enter:
-        case Qt::Key_Backspace:
-            qDebug() << "Enter";
-            if(!baseFrameGraphicsView->get_bb()->rect().isEmpty())
+	switch (event->key()) 
+	{
+		case Qt::Key_Return:
+		case Qt::Key_Enter:
+		case Qt::Key_Backspace:
+			qDebug() << "Enter";
+			if(!baseFrameGraphicsView->get_bb()->rect().isEmpty())
 			{
 				tld_msgs::Target msg;
 				msg.bb.x = (int)baseFrameGraphicsView->get_bb()->rect().x();
 				msg.bb.y = (int)baseFrameGraphicsView->get_bb()->rect().y();
 				msg.bb.width = (int)baseFrameGraphicsView->get_bb()->rect().width();
 				msg.bb.height = (int)baseFrameGraphicsView->get_bb()->rect().height();
-                msg.bb.confidence = 1.0;
-                cv_ptr->toImageMsg(msg.img);			
+				msg.bb.confidence = 1.0;
+				cv_ptr->toImageMsg(msg.img);			
 				pub1.publish(msg);
 			}
-            break;
-        case Qt::Key_Q:
-            qDebug() << "Quitting";
-            close();
-            break;
-        case Qt::Key_B:
-            clear_background();
-            break;
-        case Qt::Key_C:
-            clear_and_stop_tracking();
-            break;
-        case Qt::Key_L:
-            toggle_learning();
-            break;
-        case Qt::Key_A:
-            alternating_mode();
-            break;
-        case Qt::Key_E:
-            export_model();
-            break;
-        case Qt::Key_I:
-            import_model();
-            break;
-        case Qt::Key_R:
-            reset();
-            break;
-        case Qt::Key_F5:
-            first_image = true;
-        default:
-            event->ignore();
-            break;
-    }
+			break;
+		case Qt::Key_Q:
+			qDebug() << "Quitting";
+			close();
+			break;
+		case Qt::Key_B:
+			clear_background();
+			break;
+		case Qt::Key_C:
+			clear_and_stop_tracking();
+			break;
+		case Qt::Key_L:
+			toggle_learning();
+			break;
+		case Qt::Key_A:
+			alternating_mode();
+			break;
+		case Qt::Key_E:
+			export_model();
+			break;
+		case Qt::Key_I:
+			import_model();
+			break;
+		case Qt::Key_R:
+			reset();
+			break;
+		case Qt::Key_F5:
+			first_image = true;
+		default:
+			event->ignore();
+			break;
+	}
 }
 
 void BaseFrame::image_received_callback(const sensor_msgs::ImageConstPtr & msg)
 {
-    if(first_image || baseFrameGraphicsView->get_correct_bb())
-    {
-        try
-        {
-        	if (enc::isColor(msg->encoding))
-          		cv_ptr = cv_bridge::toCvShare(msg, enc::BGR8);
-        	else
-          		cv_ptr = cv_bridge::toCvShare(msg, enc::MONO8);
-        }
-        catch (cv_bridge::Exception& e)
-        {
-          ROS_ERROR("cv_bridge exception: %s", e.what());
-          return;
-        }
+	if(first_image || baseFrameGraphicsView->get_correct_bb())
+	{
+		try
+		{
+			if (enc::isColor(msg->encoding))
+				cv_ptr = cv_bridge::toCvShare(msg, enc::BGR8);
+			else
+				cv_ptr = cv_bridge::toCvShare(msg, enc::MONO8);
+		}
+		catch (cv_bridge::Exception& e)
+		{
+			ROS_ERROR("cv_bridge exception: %s", e.what());
+			return;
+		}
 
-	    QImage image = QImage((const unsigned char*)(cv_ptr->image.data),cv_ptr->image.cols,cv_ptr->image.rows,QImage::Format_RGB888).rgbSwapped();
+		QImage image = QImage((const unsigned char*)(cv_ptr->image.data),cv_ptr->image.cols,cv_ptr->image.rows,QImage::Format_RGB888).rgbSwapped();
 
-	    emit sig_image_received(image);
+		emit sig_image_received(image);
 
-        if(first_image)
-            first_image = false;
-    }
+		if(first_image)
+			first_image = false;
+	}
 }
 
 void BaseFrame::tracked_object_callback(const tld_msgs::BoundingBoxConstPtr & msg)
 {
-    //The tld node sent a bounding box
-    if(msg->width && msg->height && !baseFrameGraphicsView->get_correct_bb())
-    {
-        baseFrameGraphicsView->set_correct_bb(true);
-        first_image = false;
-    }
-    //The tld node sent a bad bouding box
-    else if((!msg->width || !msg->height) && baseFrameGraphicsView->get_correct_bb())
-    {
-        baseFrameGraphicsView->set_correct_bb(false);
-        first_image = true;   
-    }
-    
-    QRectF rect(msg->x,msg->y,msg->width,msg->height);
-    emit sig_tracked_object_changed(rect);
-    emit sig_confidence_changed((int)(msg->confidence*100));
+	//The tld node sent a bounding box
+	if(msg->width && msg->height && !baseFrameGraphicsView->get_correct_bb())
+	{
+		baseFrameGraphicsView->set_correct_bb(true);
+		first_image = false;
+	}
+	//The tld node sent a bad bouding box
+	else if((!msg->width || !msg->height) && baseFrameGraphicsView->get_correct_bb())
+	{
+		baseFrameGraphicsView->set_correct_bb(false);
+		first_image = true;   
+	}
+
+	QRectF rect(msg->x,msg->y,msg->width,msg->height);
+	emit sig_tracked_object_changed(rect);
+	emit sig_confidence_changed((int)(msg->confidence*100));
 }
 
 void BaseFrame::fps_tracker_callback(const std_msgs::Float32ConstPtr & msg)
 {
-    emit sig_fps_tracker_changed((int)msg->data);
+	emit sig_fps_tracker_changed((int)msg->data);
 }
 
 void BaseFrame::clear_background()
 {
 	std_msgs::Char cmd;
-    cmd.data = 'b';
+	cmd.data = 'b';
 	pub2.publish(cmd);
-    qDebug() << "Clearing Background";
+	qDebug() << "Clearing Background";
 }
 
 void BaseFrame::clear_and_stop_tracking()
 {
 	std_msgs::Char cmd;
-    cmd.data = 'c';
+	cmd.data = 'c';
 	pub2.publish(cmd);
-    qDebug() << "Clearing and stop tracking";
+	qDebug() << "Clearing and stop tracking";
 }
 
 void BaseFrame::toggle_learning()
 {
 	std_msgs::Char cmd;
-    cmd.data = 'l';
+	cmd.data = 'l';
 	pub2.publish(cmd);
-    qDebug() << "Toggle learning";
+	qDebug() << "Toggle learning";
 }
 
 void BaseFrame::alternating_mode()
 {
 	std_msgs::Char cmd;
-    cmd.data = 'a';
+	cmd.data = 'a';
 	pub2.publish(cmd);            
-    qDebug() << "Alternating mode";
+	qDebug() << "Alternating mode";
 }
 
 void BaseFrame::export_model()
 {
-    QString res = QFileDialog::getSaveFileName(this, tr("Choose a model file name"), "/", tr("All (*)"));
-    if(!res.isNull())
-    {
-        ros::NodeHandle nh;
-        nh.setParam("/ros_tld_node/modelExportFile", res.toStdString());
-    }
-    else
-    {
-      // The user pressed cancel or closed the dialog.
-    }
+	QString res = QFileDialog::getSaveFileName(this, tr("Choose a model file name"), "/", tr("All (*)"));
+	if(!res.isNull())
+	{
+		ros::NodeHandle nh;
+		nh.setParam("/ros_tld_node/modelExportFile", res.toStdString());
+	}
+	else
+	{
+		// The user pressed cancel or closed the dialog.
+	}
 
 	std_msgs::Char cmd;
-    cmd.data = 'e';
+	cmd.data = 'e';
 	pub2.publish(cmd);
-    qDebug() << "Exporting model : " << res;
+	qDebug() << "Exporting model : " << res;
 }
 
 void BaseFrame::import_model()
 {
-    QString res = QFileDialog::getOpenFileName(this, tr("Choose a model file to open"), "/", tr("All (*)"));
-    if(!res.isNull())
-    {
-        ros::NodeHandle nh;
-        nh.setParam("/ros_tld_node/modelImportFile", res.toStdString());
-    }
-    else
-    {
-      // The user pressed cancel or closed the dialog.
-    }
+	QString res = QFileDialog::getOpenFileName(this, tr("Choose a model file to open"), "/", tr("All (*)"));
+	if(!res.isNull())
+	{
+		ros::NodeHandle nh;
+		nh.setParam("/ros_tld_node/modelImportFile", res.toStdString());
+	}
+	else
+	{
+		// The user pressed cancel or closed the dialog.
+	}
 
 	std_msgs::Char cmd;
-    cmd.data = 'i';
+	cmd.data = 'i';
 	pub2.publish(cmd);
-    qDebug() << "Importing model : " << res;
+	qDebug() << "Importing model : " << res;
 }
 
 void BaseFrame::reset()
 {
 	std_msgs::Char cmd;
-    cmd.data = 'r';
+	cmd.data = 'r';
 	pub2.publish(cmd);
-    qDebug() << "Reset";
+	qDebug() << "Reset";
 }
