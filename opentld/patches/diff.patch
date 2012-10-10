@@ -1,6 +1,33 @@
---- CMakeLists.txt	2012-10-04 17:40:00.993681505 -0400
-+++ CMakeLists_.txt	2012-10-04 17:42:16.533681859 -0400
-@@ -28,52 +28,10 @@
+--- CMakeLists.txt	2012-10-10 15:54:29.465233428 -0400
++++ CMakeLists_.txt	2012-10-10 15:57:03.209233829 -0400
+@@ -1,26 +1,3 @@
+-# Open The CMake GUI
+-# specify the source directory and the binary directory
+-# press configure
+-# set CMAKE_INSTALL_PREFIX to the path where you want to install the program
+-# press configure
+-# check BUILD_WITH_QT if you want to build the program with a QT-Config GUI
+-# check GENERATE_DEB_PACKAGE if you want to build a debian package (only on Linux)
+-#
+-# UNIX Makefile:
+-# 1) go to the binary folder and type "make" to build the project
+-# 2) (optional) type "make install all" to install the files into the install
+-#    directory
+-# 3) (optional) type "make package" to create a package of the install folder
+-#    (.tgz file if GENERATE_DEB_PACKAGE=false, .deb file if GENERATE_DEB_PACKAGE=true)
+-#
+-# Microsoft Visual C++:
+-# 1) open the .sln file
+-# 2) change the mode to "Release" -> only Release is supported!
+-# 3) build the project "ALL_BUILD" to build the opentld project
+-# 4) build the project "INSTALL" to install the files into the install
+-#    directory
+-# 5) build the project "PACKAGE" to create an NSIS-installer (NSIS is required)
+-
+ 
+ project(OpenTLD)
+ 
+@@ -28,17 +5,6 @@
  
  find_package(OpenCV REQUIRED)
  
@@ -15,14 +42,13 @@
 -set(TLD_VERSION_PATCH 0)
 -set(TLD_VERSION ${TLD_VERSION_MAJOR}.${TLD_VERSION_MINOR}.${TLD_VERSION_PATCH})
 -
--#------------------------------------------------------------------------------
--#build type
--if(NOT CMAKE_BUILD_TYPE)
--    set(CMAKE_BUILD_TYPE Release CACHE STRING
--        "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
--        FORCE)
--endif(NOT CMAKE_BUILD_TYPE)
--
+ #------------------------------------------------------------------------------
+ #build type
+ if(NOT CMAKE_BUILD_TYPE)
+@@ -47,33 +13,10 @@
+         FORCE)
+ endif(NOT CMAKE_BUILD_TYPE)
+ 
 -option(BUILD_QOPENTLD "Build with Qt-config-dialog." OFF)
 -option(USE_SYSTEM_LIBS "Use the installed version of libconfig++." OFF)
 -
