@@ -27,6 +27,8 @@
 #include <ros/time.h>
 #include <ros/duration.h>
 
+namespace enc = sensor_msgs::image_encodings;
+
 void Main::process() {
 	if(autoFaceDetection && !face_cascade.load(face_cascade_name)) {
 		ROS_ERROR("--(!)Error loading cascade detector\n"); 
