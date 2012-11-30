@@ -26,6 +26,7 @@
 #include "main.hpp"
 #include <ros/time.h>
 #include <ros/duration.h>
+#include <sensor_msgs/image_encodings.h>
 
 namespace enc = sensor_msgs::image_encodings;
 
