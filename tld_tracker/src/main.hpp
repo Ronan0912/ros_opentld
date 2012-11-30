@@ -72,7 +72,7 @@ class Main {
 			pub1 = n.advertise<tld_msgs::BoundingBox>("tld_tracked_object", 1000, true);
 			pub2 = n.advertise<std_msgs::Float32>("tld_fps", 1000, true);
 			sub1 = n.subscribe("image_rgb", 1000, &Main::imageReceivedCallback, this);
-			sub2 = n.subscribe("bouding_box", 1000, &Main::targetReceivedCallback, this);
+			sub2 = n.subscribe("bounding_box", 1000, &Main::targetReceivedCallback, this);
 			sub3 = n.subscribe("cmds", 1000, &Main::cmdReceivedCallback, this);
 
 			semaphore.lock();
@@ -105,7 +105,7 @@ class Main {
 
 		std_msgs::Header img_header;
 		cv::Mat img;
-		cv_bridge::CvImagePtr imgBufferPtr;
+		cv_bridge::CvImagePtr img_buffer_ptr;
 		cv::Mat gray;
 		boost::interprocess::interprocess_mutex mutex;
 		boost::interprocess::interprocess_mutex semaphore;

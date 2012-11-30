@@ -10,7 +10,7 @@
 	    output="screen">
         <!-- remap of topics -->
         <remap from="image_rgb" to="im_acq"/>
-        <remap from="bouding_box" to="tld_gui_bb"/>
+        <remap from="bounding_box" to="tld_gui_bb"/>
         <remap from="cmds" to="tld_gui_cmds"/>
 
         <!-- declare param and read value of arg-->

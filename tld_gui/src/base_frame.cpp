@@ -132,7 +132,17 @@ void BaseFrame::image_received_callback(const sensor_msgs::ImageConstPtr & msg)
 			return;
 		}
 
-		QImage image = QImage((const unsigned char*)(cv_ptr->image.data),cv_ptr->image.cols,cv_ptr->image.rows,QImage::Format_RGB888).rgbSwapped();
+		QImage image;
+
+		if (enc::isColor(msg->encoding))
+		{
+			image = QImage((const unsigned char*)(cv_ptr->image.data),cv_ptr->image.cols,cv_ptr->image.rows,QImage::Format_RGB888);
+			image.rgbSwapped();
+		}
+		else
+		{
+			image = QImage((const unsigned char*)(cv_ptr->image.data),cv_ptr->image.cols,cv_ptr->image.rows,QImage::Format_Indexed8);
+		}
 
 		emit sig_image_received(image);
 

@@ -109,12 +109,17 @@ void Main::imageReceivedCallback(const sensor_msgs::ImageConstPtr & msg) {
 	bool empty = false;
 	mutex.lock();
 
-	if(imgBufferPtr.get() == 0) {
+	if(img_buffer_ptr.get() == 0) {
 		empty = true;
 	}
 
 	try {
-		imgBufferPtr = cv_bridge::toCvCopy(msg);
+		if (enc::isColor(msg->encoding))
+			img_buffer_ptr = cv_bridge::toCvCopy(msg, enc::BGR8);
+		else {
+			img_buffer_ptr = cv_bridge::toCvCopy(msg, enc::MONO8);
+			cv::cvtColor(img_buffer_ptr->image, img_buffer_ptr->image, CV_GRAY2BGR);
+		}
 	} catch (cv_bridge::Exception& e) {
 		ROS_ERROR("cv_bridge exception: %s", e.what());
 		return;
@@ -140,13 +145,15 @@ void Main::targetReceivedCallback(const tld_msgs::TargetConstPtr & msg) {
 	target_bb.height = msg->bb.height;
 
 	try {
-		target_image = cv_bridge::toCvCopy(msg->img)->image;
+		if (enc::isColor(msg->img.encoding))
+			target_image = cv_bridge::toCvCopy(msg->img, enc::BGR8)->image;
+		else
+			target_image = cv_bridge::toCvCopy(msg->img, enc::MONO8)->image;
 	} catch (cv_bridge::Exception& e) {
 		ROS_ERROR("cv_bridge exception: %s", e.what());
 		return;
 	}
 
-	cv::cvtColor(target_image, target_image, CV_BGR2GRAY);
 	correctBB = true;
 }
 
@@ -196,10 +203,18 @@ bool Main::newImageReceived() {
 
 void Main::getLastImageFromBuffer() {
 	mutex.lock();
-	img_header = imgBufferPtr->header;
-	img = imgBufferPtr->image;
-	cv::cvtColor(img, gray, CV_BGR2GRAY);
-	imgBufferPtr.reset();
+	img_header = img_buffer_ptr->header;
+	img = img_buffer_ptr->image;
+
+	if(img.type() == CV_8U) {
+		gray = img;
+		cv::cvtColor(gray, img, CV_GRAY2BGR);
+	}
+	else {
+		cv::cvtColor(img, gray, CV_BGR2GRAY);
+	}
+		
+	img_buffer_ptr.reset();
 	mutex.unlock();
 }
 
