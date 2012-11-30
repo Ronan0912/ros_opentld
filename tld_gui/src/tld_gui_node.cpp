@@ -46,6 +46,7 @@ int main(int argc, char **argv)
 	spinner.stop();
 
 	delete gui;
+	delete app;
 
 	return 0;
 }

@@ -12,7 +12,7 @@ set(ROS_BUILD_TYPE Debug)
 
 rosbuild_init()
 
-add_definitions(-DPROJECT_PREFIX='"tld_predator"')
+add_definitions(-DPROJECT_PREFIX='"tld_gui"')
 add_definitions(-DPROJECT_VERSION='"0.1"')
 
 #set the default path for built executables to the "bin" directory

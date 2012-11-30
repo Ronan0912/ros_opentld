@@ -74,7 +74,7 @@ class Main {
 			sub1 = n.subscribe("image_rgb", 1000, &Main::imageReceivedCallback, this);
 			sub2 = n.subscribe("bounding_box", 1000, &Main::targetReceivedCallback, this);
 			sub3 = n.subscribe("cmds", 1000, &Main::cmdReceivedCallback, this);
-
+z
 			semaphore.lock();
 		}
 
