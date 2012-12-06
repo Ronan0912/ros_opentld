@@ -148,10 +148,7 @@ void Main::targetReceivedCallback(const tld_msgs::TargetConstPtr & msg) {
 	target_bb.height = msg->bb.height;
 
 	try {
-		if (enc::isColor(msg->img.encoding))
-			target_image = cv_bridge::toCvCopy(msg->img, enc::BGR8)->image;
-		else
-			target_image = cv_bridge::toCvCopy(msg->img, enc::MONO8)->image;
+		target_image = cv_bridge::toCvCopy(msg->img, enc::MONO8)->image;
 	} catch (cv_bridge::Exception& e) {
 		ROS_ERROR("cv_bridge exception: %s", e.what());
 		return;
@@ -209,13 +206,7 @@ void Main::getLastImageFromBuffer() {
 	img_header = img_buffer_ptr->header;
 	img = img_buffer_ptr->image;
 
-	if(img.type() == CV_8U) {
-		gray = img;
-		cv::cvtColor(gray, img, CV_GRAY2BGR);
-	}
-	else {
-		cv::cvtColor(img, gray, CV_BGR2GRAY);
-	}
+	cv::cvtColor(img, gray, CV_BGR2GRAY);
 		
 	img_buffer_ptr.reset();
 	mutex.unlock();
