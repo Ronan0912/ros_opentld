@@ -72,7 +72,7 @@ void Main::process() {
 					tld->learningEnabled = true;
 					state = TRACKING;
 				} else {
-					sleep(1);
+					ros::Duration(1.0).sleep();
 					ROS_INFO("Waiting for a BB");
 				}
 				break;
