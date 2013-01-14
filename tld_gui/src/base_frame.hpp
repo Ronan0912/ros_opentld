@@ -26,8 +26,6 @@
 #ifndef BASE_FRAME_H_
 #define BASE_FRAME_H_
 
-#include <QtGui/QApplication>
-
 #include <QtGui/QWidget>
 #include <QtGui/QKeyEvent>
 #include <QtCore/QObject>
