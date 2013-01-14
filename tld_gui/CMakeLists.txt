@@ -25,7 +25,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #uncomment if you have defined services
 #rosbuild_gensrv()
 
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #find packages
 find_package(Qt4 COMPONENTS QtCore QtGui)
 
@@ -33,12 +33,7 @@ find_package(Qt4 COMPONENTS QtCore QtGui)
 #Qt4 specific
 set(TLD_QT_HEADERS src/base_frame.hpp src/ui_baseFrame.h src/base_frame_graphics_view.hpp)
 QT4_WRAP_CPP(TLD_QT_HEADERS_MOC ${TLD_QT_HEADERS})
-
 set(SRC_FILES src/base_frame.cpp src/base_frame_graphics_view.cpp ${TLD_QT_HEADERS_MOC})
-set(INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/src)
-
-include(${QT_USE_FILE})
-include_directories(${INCLUDE_DIRS})
 
 #-------------------------------------------------------------------------------
 #common commands for building c++ executables and libraries
