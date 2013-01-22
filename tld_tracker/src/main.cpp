@@ -30,16 +30,21 @@
 
 namespace enc = sensor_msgs::image_encodings;
 
-void Main::process() {
-	if(autoFaceDetection && !face_cascade.load(face_cascade_name)) {
-		ROS_ERROR("--(!)Error loading cascade detector\n"); 
+void Main::process()
+{
+	if(autoFaceDetection && !face_cascade.load(face_cascade_path))
+	{
+		ROS_FATAL("--(!)Error loading cascade detector\n"); 
 		return;
 	}
 
-	while (ros::ok()) {
-		switch (state) {
+	while (ros::ok())
+	{
+		switch (state)
+		{
 			case INIT:
-				if(newImageReceived()) {
+				if(newImageReceived())
+				{
 					if(showOutput)
 						sendObjectTracked(0, 0, 0, 0, 0);
 					getLastImageFromBuffer();
@@ -51,15 +56,18 @@ void Main::process() {
 				}
 				break;
 			case TRACKER_INIT:
-				if(loadModel && !modelImportFile.empty()) {
+				if(loadModel && !modelImportFile.empty())
+				{
 					ROS_INFO("Loading model %s", modelImportFile.c_str());
 
 					tld->readFromFile(modelImportFile.c_str());
 					tld->learningEnabled = false;
 					state = TRACKING;
-				} else if(autoFaceDetection || correctBB) {
-
-					if(autoFaceDetection) {
+				}
+				else if(autoFaceDetection || correctBB)
+				{
+					if(autoFaceDetection)
+					{
 						target_image = gray;
 						target_bb = faceDetection();
 					}
@@ -71,13 +79,16 @@ void Main::process() {
 					tld->selectObject(target_image, &target_bb);
 					tld->learningEnabled = true;
 					state = TRACKING;
-				} else {
+				}
+				else
+				{
 					ros::Duration(1.0).sleep();
 					ROS_INFO("Waiting for a BB");
 				}
 				break;
 			case TRACKING:
-				if(newImageReceived()) {
+				if(newImageReceived())
+				{
 					ros::Time tic = ros::Time::now();
 
 					getLastImageFromBuffer();
@@ -90,10 +101,10 @@ void Main::process() {
 					msg_fps.data = fps;
 					pub2.publish(msg_fps);
 
-					if(showOutput && tld->currBB != NULL) {
+					if(showOutput && tld->currBB != NULL)
+					{
 						sendObjectTracked(tld->currBB->x,tld->currBB->y,tld->currBB->width,tld->currBB->height,tld->currConf);
 					}
-
 				}
 				break;
 			default:
@@ -101,40 +112,49 @@ void Main::process() {
 		}
 	}
 
-	if(exportModelAfterRun) {
+	if(exportModelAfterRun)
+	{
 		tld->writeToFile(modelExportFile.c_str());
 	}
 
 	semaphore.unlock();
 }
 
-void Main::imageReceivedCallback(const sensor_msgs::ImageConstPtr & msg) {
+void Main::imageReceivedCallback(const sensor_msgs::ImageConstPtr & msg)
+{
 	bool empty = false;
 	mutex.lock();
 
-	if(img_buffer_ptr.get() == 0) {
+	if(img_buffer_ptr.get() == 0)
+	{
 		empty = true;
 	}
 
-	try {
+	try
+	{
 		if (enc::isColor(msg->encoding))
 			img_buffer_ptr = cv_bridge::toCvCopy(msg, enc::BGR8);
-		else {
+		else
+		{
 			img_buffer_ptr = cv_bridge::toCvCopy(msg, enc::MONO8);
 			cv::cvtColor(img_buffer_ptr->image, img_buffer_ptr->image, CV_GRAY2BGR);
 		}
-	} catch (cv_bridge::Exception& e) {
+	}
+	catch (cv_bridge::Exception& e)
+	{
 		ROS_ERROR("cv_bridge exception: %s", e.what());
 		return;
 	}
 
-	if(empty) {
+	if(empty)
+	{
 		semaphore.unlock();
 	}
 	mutex.unlock();
 }
 
-void Main::targetReceivedCallback(const tld_msgs::TargetConstPtr & msg) {
+void Main::targetReceivedCallback(const tld_msgs::TargetConstPtr & msg)
+{
 	reset();
 	ROS_ASSERT(msg->bb.x >= 0);
 	ROS_ASSERT(msg->bb.y >= 0);
@@ -147,9 +167,12 @@ void Main::targetReceivedCallback(const tld_msgs::TargetConstPtr & msg) {
 	target_bb.width = msg->bb.width;
 	target_bb.height = msg->bb.height;
 
-	try {
+	try
+	{
 		target_image = cv_bridge::toCvCopy(msg->img, enc::MONO8)->image;
-	} catch (cv_bridge::Exception& e) {
+	}
+	catch (cv_bridge::Exception& e)
+	{
 		ROS_ERROR("cv_bridge exception: %s", e.what());
 		return;
 	}
@@ -157,8 +180,10 @@ void Main::targetReceivedCallback(const tld_msgs::TargetConstPtr & msg) {
 	correctBB = true;
 }
 
-void Main::cmdReceivedCallback(const std_msgs::CharConstPtr & cmd) {
-	switch (cmd->data) {
+void Main::cmdReceivedCallback(const std_msgs::CharConstPtr & cmd)
+{
+	switch (cmd->data)
+	{
 		case 'b':
 			clearBackground();
 			break;
@@ -185,7 +210,8 @@ void Main::cmdReceivedCallback(const std_msgs::CharConstPtr & cmd) {
 	}
 }
 
-void Main::sendObjectTracked(int x, int y, int width, int height, float confidence) {
+void Main::sendObjectTracked(int x, int y, int width, int height, float confidence)
+{
 	tld_msgs::BoundingBox msg;
 	msg.header = img_header; //Add the Header of the last image processed
 	msg.x = x;
@@ -196,12 +222,14 @@ void Main::sendObjectTracked(int x, int y, int width, int height, float confiden
 	pub1.publish(msg);
 }
 
-bool Main::newImageReceived() {
+bool Main::newImageReceived()
+{
 	semaphore.lock();
 	return true;
 }
 
-void Main::getLastImageFromBuffer() {
+void Main::getLastImageFromBuffer()
+{
 	mutex.lock();
 	img_header = img_buffer_ptr->header;
 	img = img_buffer_ptr->image;
@@ -212,31 +240,39 @@ void Main::getLastImageFromBuffer() {
 	mutex.unlock();
 }
 
-void Main::clearBackground() {
+void Main::clearBackground()
+{
 	tld::ForegroundDetector* fg = tld->detectorCascade->foregroundDetector;
 
-	if(fg->bgImg.empty()) {
+	if(fg->bgImg.empty())
+	{
 		gray.copyTo(fg->bgImg);
-	} else {
+	}
+	else
+	{
 		fg->bgImg.release();
 	}
 }
 
-void Main::clearAndStopTracking() {
+void Main::clearAndStopTracking()
+{
 	tld->release();
 }
 
-void Main::toggleLearning() {
+void Main::toggleLearning()
+{
 	tld->learningEnabled = !tld->learningEnabled;
 	ROS_INFO("LearningEnabled: %d\n", tld->learningEnabled);   
 }
 
-void Main::alternatingMode() {
+void Main::alternatingMode()
+{
 	tld->alternating = !tld->alternating;
 	ROS_INFO("Alternating: %d\n", tld->alternating);        
 }
 
-void Main::exportModel() {
+void Main::exportModel()
+{
 	ros::NodeHandle np("~");
 	np.getParam("modelExportFile", modelExportFile);
 	//tld->learningEnabled = false;
@@ -244,19 +280,22 @@ void Main::exportModel() {
 	ROS_INFO("Exporting model %s", modelExportFile.c_str());
 }
 
-void Main::importModel() {
+void Main::importModel()
+{
 	ros::NodeHandle np("~");
 	np.getParam("modelImportFile", modelImportFile);
 	loadModel = true;
 	state = TRACKER_INIT;
 }
 
-void Main::reset() {
+void Main::reset()
+{
 	correctBB = false;
 	state = INIT;
 }
 
-cv::Rect Main::faceDetection() {
+cv::Rect Main::faceDetection()
+{
 	std::vector<cv::Rect> faces;
 
 	while(faces.empty()) {
@@ -269,3 +308,4 @@ cv::Rect Main::faceDetection() {
 
 	return faces[0];
 }
+

@@ -26,14 +26,29 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 add_definitions(-fPIC)
 
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #find packages
 find_package(OpenCV REQUIRED)
+find_package(Qt4 COMPONENTS QtCore QtGui)
+
+#Qt4 specific for the gui
+set(TLD_QT_HEADERS src/base_frame.hpp src/ui_baseFrame.h src/base_frame_graphics_view.hpp)
+QT4_WRAP_CPP(TLD_QT_HEADERS_MOC ${TLD_QT_HEADERS})
+set(SRC_FILES src/base_frame.cpp src/base_frame_graphics_view.cpp ${TLD_QT_HEADERS_MOC})
+include(${QT_USE_FILE})
 
 #-------------------------------------------------------------------------------
-include_directories(src/)
+#Compile and link
 
-#-------------------------------------------------------------------------------
-#add subdirectories
-add_subdirectory(src)
+#Target 1 : ros_tld_tracker
+rosbuild_add_library(main src/main.cpp src/main.hpp)
+target_link_libraries(main libopentld cvblobs ${OpenCV_LIBS} cv_bridge)
 
+rosbuild_add_executable(ros_tld_tracker_node src/tld_node.cpp)
+target_link_libraries(ros_tld_tracker_node main)
+
+#Target 2 : ros_tld_gui
+rosbuild_add_library(gui_lib ${SRC_FILES})
+
+rosbuild_add_executable(ros_tld_gui_node src/tld_gui_node.cpp)
+target_link_libraries(ros_tld_gui_node gui_lib ${QT_LIBRARIES})

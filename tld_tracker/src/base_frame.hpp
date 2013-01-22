@@ -68,14 +68,14 @@ class BaseFrame : public QWidget, private Ui::BaseFrame
 		void tracked_object_callback(const tld_msgs::BoundingBoxConstPtr & msg);
 		void fps_tracker_callback(const std_msgs::Float32ConstPtr & msg);
 
-signals:
+	signals:
 		void sig_image_received(const QImage & image);
 		void sig_tracked_object_changed(QRectF bb);
 		void sig_fps_tracker_changed(int fps);
 		void sig_confidence_changed(int confidence);
 
 		public slots:
-			void clear_background();
+		void clear_background();
 		void clear_and_stop_tracking();
 		void toggle_learning();
 		void alternating_mode();

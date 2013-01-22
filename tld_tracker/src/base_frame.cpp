@@ -48,7 +48,7 @@ BaseFrame::BaseFrame()
 	QObject::connect(exporting_button,SIGNAL(clicked()),this,SLOT(export_model()));
 	QObject::connect(reset_button,SIGNAL(clicked()),this,SLOT(reset()));
 
-	sub1 = n.subscribe("image_rgb", 1000, &BaseFrame::image_received_callback, this);
+	sub1 = n.subscribe("image", 1000, &BaseFrame::image_received_callback, this);
 	sub2 = n.subscribe("tracked_object", 1000, &BaseFrame::tracked_object_callback, this);
 	sub3 = n.subscribe("fps_tracker", 1000, &BaseFrame::fps_tracker_callback, this);
 	pub1 = n.advertise<tld_msgs::Target>("tld_gui_bb", 1000, true);

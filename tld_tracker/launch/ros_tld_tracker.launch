@@ -4,12 +4,14 @@
 	<arg name="auto_face_detection" default="false"/>
 	<arg name="model_import_file" default="/home/tld_models/sample"/>
 	<arg name="model_export_file" default="/home/tld_models/sample"/>
+	<arg name="cascade_path" default=
+		"/opt/ros/fuerte/share/OpenCV/haarcascades/haarcascade_frontalface_alt.xml"/>
 
 	<!-- Nodes -->
     <node name="ros_tld_tracker_node" pkg="tld_tracker" type="ros_tld_tracker_node"
 	    output="screen">
         <!-- remap of topics -->
-        <remap from="image_rgb" to="im_acq"/>
+        <remap from="image" to="im_acq"/>
         <remap from="bounding_box" to="tld_gui_bb"/>
         <remap from="cmds" to="tld_gui_cmds"/>
 
@@ -20,6 +22,7 @@
         <param name="modelImportFile" value="$(arg model_import_file)" type="string"/>
         <param name="exportModelAfterRun" value="false" type="bool"/>
         <param name="modelExportFile" value="$(arg model_export_file)" type="string"/>
+        <param name="cascadePath" value="$(arg cascade_path)" type="string"/>
         <param name="x" value="200" type="int"/>
         <param name="y" value="200" type="int"/>
         <param name="width" value="200" type="int"/>

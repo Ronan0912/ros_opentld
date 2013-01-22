@@ -44,10 +44,11 @@
 #include <std_msgs/Float32.h>
 #include <string>
 
-class Main {
-
+class Main
+{
 	public:
-		Main() {
+		Main()
+		{
 			tld = new tld::TLD();
 
 			state = INIT;
@@ -59,6 +60,8 @@ class Main {
 			np.param("exportModelAfterRun", exportModelAfterRun, false);
 			np.param("modelImportFile", modelImportFile, std::string("model"));
 			np.param("modelExportFile", modelExportFile, std::string("model"));
+			np.param("cascadePath", face_cascade_path, 
+					std::string("haarcascade_frontalface_alt.xml"));
 
 			np.param("x", target_bb.x, 100);
 			np.param("y", target_bb.y, 100);
@@ -66,19 +69,17 @@ class Main {
 			np.param("height", target_bb.height, 100);
 			np.param("correctBB", correctBB, false);
 
-			if(autoFaceDetection)
-				face_cascade_name = "/opt/ros/fuerte/share/OpenCV/haarcascades/haarcascade_frontalface_alt.xml";
-
 			pub1 = n.advertise<tld_msgs::BoundingBox>("tld_tracked_object", 1000, true);
 			pub2 = n.advertise<std_msgs::Float32>("tld_fps", 1000, true);
-			sub1 = n.subscribe("image_rgb", 1000, &Main::imageReceivedCallback, this);
+			sub1 = n.subscribe("image", 1000, &Main::imageReceivedCallback, this);
 			sub2 = n.subscribe("bounding_box", 1000, &Main::targetReceivedCallback, this);
 			sub3 = n.subscribe("cmds", 1000, &Main::cmdReceivedCallback, this);
 
 			semaphore.lock();
 		}
 
-		~Main() {
+		~Main()
+		{
 			delete tld;
 		}
 
@@ -93,7 +94,8 @@ class Main {
 		std::string modelImportFile;
 		std::string modelExportFile;
 
-		enum {
+		enum
+		{
 			INIT,
 			TRACKER_INIT,
 			TRACKING
@@ -116,7 +118,7 @@ class Main {
 		ros::Subscriber sub2;
 		ros::Subscriber sub3;
 
-		std::string face_cascade_name;
+		std::string face_cascade_path;
 		cv::CascadeClassifier face_cascade;
 
 		bool newImageReceived();
