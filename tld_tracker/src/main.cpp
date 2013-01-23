@@ -299,7 +299,7 @@ cv::Rect Main::faceDetection()
 	std::vector<cv::Rect> faces;
 
 	while(faces.empty())
-{
+	{
 		if(newImageReceived())
 			getLastImageFromBuffer();
 

@@ -4,8 +4,6 @@ opentld/build/
 opentld/installed
 opentld/patched
 opentld/rospack_nosubdirs
-tld_gui/bin/
-tld_gui/build/
 tld_msgs/build/
 tld_msgs/msg_gen/
 tld_msgs/src/tld_msgs
