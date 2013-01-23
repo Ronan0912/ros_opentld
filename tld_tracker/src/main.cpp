@@ -160,7 +160,7 @@ void Main::targetReceivedCallback(const tld_msgs::TargetConstPtr & msg)
 	ROS_ASSERT(msg->bb.y >= 0);
 	ROS_ASSERT(msg->bb.width > 0);
 	ROS_ASSERT(msg->bb.height > 0);
-	ROS_INFO("Bouding Box received");
+	ROS_INFO("Bounding Box received");
 
 	target_bb.x = msg->bb.x;
 	target_bb.y = msg->bb.y;
@@ -298,7 +298,8 @@ cv::Rect Main::faceDetection()
 {
 	std::vector<cv::Rect> faces;
 
-	while(faces.empty()) {
+	while(faces.empty())
+{
 		if(newImageReceived())
 			getLastImageFromBuffer();
 
