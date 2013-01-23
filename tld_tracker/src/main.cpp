@@ -104,6 +104,7 @@ void Main::process() {
 	if(exportModelAfterRun) {
 		tld->writeToFile(modelExportFile.c_str());
 	}
+
 	semaphore.unlock();
 }
 
@@ -127,7 +128,7 @@ void Main::imageReceivedCallback(const sensor_msgs::ImageConstPtr & msg) {
 		return;
 	}
 
-	if(!empty) {
+	if(empty) {
 		semaphore.unlock();
 	}
 	mutex.unlock();
@@ -139,7 +140,7 @@ void Main::targetReceivedCallback(const tld_msgs::TargetConstPtr & msg) {
 	ROS_ASSERT(msg->bb.y >= 0);
 	ROS_ASSERT(msg->bb.width > 0);
 	ROS_ASSERT(msg->bb.height > 0);
-	ROS_INFO("Bounding Box received");
+	ROS_INFO("Bouding Box received");
 
 	target_bb.x = msg->bb.x;
 	target_bb.y = msg->bb.y;
