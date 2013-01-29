@@ -64,9 +64,9 @@ class BaseFrame : public QWidget, private Ui::BaseFrame
 		cv_bridge::CvImageConstPtr cv_ptr;
 		bool first_image;
 
-		void image_received_callback(const sensor_msgs::ImageConstPtr & msg);
-		void tracked_object_callback(const tld_msgs::BoundingBoxConstPtr & msg);
-		void fps_tracker_callback(const std_msgs::Float32ConstPtr & msg);
+		void image_receivedCB(const sensor_msgs::ImageConstPtr & msg);
+		void tracked_objectCB(const tld_msgs::BoundingBoxConstPtr & msg);
+		void fps_trackerCB(const std_msgs::Float32ConstPtr & msg);
 
 	signals:
 		void sig_image_received(const QImage & image);

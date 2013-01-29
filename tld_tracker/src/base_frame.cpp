@@ -36,8 +36,8 @@ BaseFrame::BaseFrame()
 {   
 	setupUi(this);
 
-	QObject::connect(this,SIGNAL(sig_image_received(const QImage &)),baseFrameGraphicsView,SLOT(image_received(const QImage &)));    
-	QObject::connect(this,SIGNAL(sig_tracked_object_changed(QRectF)),baseFrameGraphicsView,SLOT(tracked_objet_changed(QRectF)));
+	QObject::connect(this,SIGNAL(sig_image_received(const QImage &)),base_frame_graphics_view,SLOT(image_received(const QImage &)));    
+	QObject::connect(this,SIGNAL(sig_tracked_object_changed(QRectF)),base_frame_graphics_view,SLOT(tracked_objet_changed(QRectF)));
 	QObject::connect(this,SIGNAL(sig_fps_tracker_changed(int)),lcd_fps_tracker,SLOT(display(int)));  
 	QObject::connect(this,SIGNAL(sig_confidence_changed(int)),confidence_bar,SLOT(setValue(int)));  
 	QObject::connect(background_reset_button,SIGNAL(clicked()),this,SLOT(clear_background()));
@@ -48,9 +48,9 @@ BaseFrame::BaseFrame()
 	QObject::connect(exporting_button,SIGNAL(clicked()),this,SLOT(export_model()));
 	QObject::connect(reset_button,SIGNAL(clicked()),this,SLOT(reset()));
 
-	sub1 = n.subscribe("image", 1000, &BaseFrame::image_received_callback, this);
-	sub2 = n.subscribe("tracked_object", 1000, &BaseFrame::tracked_object_callback, this);
-	sub3 = n.subscribe("fps_tracker", 1000, &BaseFrame::fps_tracker_callback, this);
+	sub1 = n.subscribe("image", 1000, &BaseFrame::image_receivedCB, this);
+	sub2 = n.subscribe("tracked_object", 1000, &BaseFrame::tracked_objectCB, this);
+	sub3 = n.subscribe("fps_tracker", 1000, &BaseFrame::fps_trackerCB, this);
 	pub1 = n.advertise<tld_msgs::Target>("tld_gui_bb", 1000, true);
 	pub2 = n.advertise<std_msgs::Char>("tld_gui_cmds", 1000, true);
 
@@ -70,13 +70,13 @@ void BaseFrame::keyPressEvent(QKeyEvent * event)
 		case Qt::Key_Enter:
 		case Qt::Key_Backspace:
 			qDebug() << "Enter";
-			if(!baseFrameGraphicsView->get_bb()->rect().isEmpty())
+			if(!base_frame_graphics_view->get_bb()->rect().isEmpty())
 			{
 				tld_msgs::Target msg;
-				msg.bb.x = (int)baseFrameGraphicsView->get_bb()->rect().x();
-				msg.bb.y = (int)baseFrameGraphicsView->get_bb()->rect().y();
-				msg.bb.width = (int)baseFrameGraphicsView->get_bb()->rect().width();
-				msg.bb.height = (int)baseFrameGraphicsView->get_bb()->rect().height();
+				msg.bb.x = (int)base_frame_graphics_view->get_bb()->rect().x();
+				msg.bb.y = (int)base_frame_graphics_view->get_bb()->rect().y();
+				msg.bb.width = (int)base_frame_graphics_view->get_bb()->rect().width();
+				msg.bb.height = (int)base_frame_graphics_view->get_bb()->rect().height();
 				msg.bb.confidence = 1.0;
 				cv_ptr->toImageMsg(msg.img);			
 				pub1.publish(msg);
@@ -115,9 +115,9 @@ void BaseFrame::keyPressEvent(QKeyEvent * event)
 	}
 }
 
-void BaseFrame::image_received_callback(const sensor_msgs::ImageConstPtr & msg)
+void BaseFrame::image_receivedCB(const sensor_msgs::ImageConstPtr & msg)
 {
-	if(first_image || baseFrameGraphicsView->get_correct_bb())
+	if(first_image || base_frame_graphics_view->get_correct_bb())
 	{
 		try
 		{
@@ -151,18 +151,18 @@ void BaseFrame::image_received_callback(const sensor_msgs::ImageConstPtr & msg)
 	}
 }
 
-void BaseFrame::tracked_object_callback(const tld_msgs::BoundingBoxConstPtr & msg)
+void BaseFrame::tracked_objectCB(const tld_msgs::BoundingBoxConstPtr & msg)
 {
 	//The tld node sent a bounding box
-	if(msg->width && msg->height && !baseFrameGraphicsView->get_correct_bb())
+	if(msg->width && msg->height && !base_frame_graphics_view->get_correct_bb())
 	{
-		baseFrameGraphicsView->set_correct_bb(true);
+		base_frame_graphics_view->set_correct_bb(true);
 		first_image = false;
 	}
 	//The tld node sent a bad bouding box
-	else if((!msg->width || !msg->height) && baseFrameGraphicsView->get_correct_bb())
+	else if((!msg->width || !msg->height) && base_frame_graphics_view->get_correct_bb())
 	{
-		baseFrameGraphicsView->set_correct_bb(false);
+		base_frame_graphics_view->set_correct_bb(false);
 		first_image = true;   
 	}
 
@@ -171,7 +171,7 @@ void BaseFrame::tracked_object_callback(const tld_msgs::BoundingBoxConstPtr & ms
 	emit sig_confidence_changed((int)(msg->confidence*100));
 }
 
-void BaseFrame::fps_tracker_callback(const std_msgs::Float32ConstPtr & msg)
+void BaseFrame::fps_trackerCB(const std_msgs::Float32ConstPtr & msg)
 {
 	emit sig_fps_tracker_changed((int)msg->data);
 }

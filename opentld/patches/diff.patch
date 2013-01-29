@@ -45,7 +45,7 @@
  #------------------------------------------------------------------------------
  #build type
  if(NOT CMAKE_BUILD_TYPE)
-@@ -47,33 +13,10 @@
+@@ -47,33 +13,7 @@
          FORCE)
  endif(NOT CMAKE_BUILD_TYPE)
  
@@ -68,9 +68,9 @@
 -set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 +add_definitions(-fPIC)
  
- #-------------------------------------------------------------------------------
- #add subdirectories
- add_subdirectory(src/3rdparty/cvblobs)
+-#-------------------------------------------------------------------------------
+-#add subdirectories
+-add_subdirectory(src/3rdparty/cvblobs)
 -
 -if(NOT USE_SYSTEM_LIBS)
 -    add_subdirectory(src/3rdparty/libconfig)

@@ -42,7 +42,7 @@ include(${QT_USE_FILE})
 
 #Target 1 : ros_tld_tracker
 rosbuild_add_library(main src/main.cpp src/main.hpp)
-target_link_libraries(main libopentld cvblobs ${OpenCV_LIBS} cv_bridge)
+target_link_libraries(main libopentld ${OpenCV_LIBS} cv_bridge)
 
 rosbuild_add_executable(ros_tld_tracker_node src/tld_node.cpp)
 target_link_libraries(ros_tld_tracker_node main)

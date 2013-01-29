@@ -34,7 +34,7 @@ class Ui_BaseFrame
 public:
     QHBoxLayout *horizontalLayout;
     QHBoxLayout *horizontalLayout_1;
-    BaseFrameGraphicsView *baseFrameGraphicsView;
+    BaseFrameGraphicsView *base_frame_graphics_view;
     QVBoxLayout *verticalLayout;
     QLabel *confidence_label;
     QLabel *fps_acq_label;
@@ -58,11 +58,11 @@ public:
         BaseFrame->setLocale(QLocale(QLocale::English, QLocale::Canada));
         horizontalLayout = new QHBoxLayout(BaseFrame);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        baseFrameGraphicsView = new BaseFrameGraphicsView(BaseFrame);
-        baseFrameGraphicsView->setMinimumSize(640, 480);
-        baseFrameGraphicsView->setObjectName(QString::fromUtf8("baseFrameGraphicsView"));
+        base_frame_graphics_view = new BaseFrameGraphicsView(BaseFrame);
+        base_frame_graphics_view->setMinimumSize(640, 480);
+        base_frame_graphics_view->setObjectName(QString::fromUtf8("base_frame_graphics_view"));
 
-        horizontalLayout->addWidget(baseFrameGraphicsView);
+        horizontalLayout->addWidget(base_frame_graphics_view);
 
         verticalLayout = new QVBoxLayout();
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));

@@ -78,8 +78,8 @@ class BaseFrameGraphicsView : public QGraphicsView
 		/* Mathieu's function */
 		void computeScaleOffsets(float & scale, float & offsetX, float & offsetY) const;
 
-		public slots:
-			void image_received(const QImage & img);
+	public slots:
+		void image_received(const QImage & img);
 		void tracked_objet_changed(QRectF rect);
 
 signals:

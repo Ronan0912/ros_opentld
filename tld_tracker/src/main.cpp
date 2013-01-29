@@ -120,7 +120,7 @@ void Main::process()
 	semaphore.unlock();
 }
 
-void Main::imageReceivedCallback(const sensor_msgs::ImageConstPtr & msg)
+void Main::imageReceivedCB(const sensor_msgs::ImageConstPtr & msg)
 {
 	bool empty = false;
 	mutex.lock();
@@ -153,7 +153,7 @@ void Main::imageReceivedCallback(const sensor_msgs::ImageConstPtr & msg)
 	mutex.unlock();
 }
 
-void Main::targetReceivedCallback(const tld_msgs::TargetConstPtr & msg)
+void Main::targetReceivedCB(const tld_msgs::TargetConstPtr & msg)
 {
 	reset();
 	ROS_ASSERT(msg->bb.x >= 0);
@@ -180,7 +180,7 @@ void Main::targetReceivedCallback(const tld_msgs::TargetConstPtr & msg)
 	correctBB = true;
 }
 
-void Main::cmdReceivedCallback(const std_msgs::CharConstPtr & cmd)
+void Main::cmdReceivedCB(const std_msgs::CharConstPtr & cmd)
 {
 	switch (cmd->data)
 	{

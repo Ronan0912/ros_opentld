@@ -71,9 +71,9 @@ class Main
 
 			pub1 = n.advertise<tld_msgs::BoundingBox>("tld_tracked_object", 1000, true);
 			pub2 = n.advertise<std_msgs::Float32>("tld_fps", 1000, true);
-			sub1 = n.subscribe("image", 1000, &Main::imageReceivedCallback, this);
-			sub2 = n.subscribe("bounding_box", 1000, &Main::targetReceivedCallback, this);
-			sub3 = n.subscribe("cmds", 1000, &Main::cmdReceivedCallback, this);
+			sub1 = n.subscribe("image", 1000, &Main::imageReceivedCB, this);
+			sub2 = n.subscribe("bounding_box", 1000, &Main::targetReceivedCB, this);
+			sub3 = n.subscribe("cmds", 1000, &Main::cmdReceivedCB, this);
 
 			semaphore.lock();
 		}
@@ -123,9 +123,9 @@ class Main
 
 		bool newImageReceived();
 		void getLastImageFromBuffer();
-		void imageReceivedCallback(const sensor_msgs::ImageConstPtr & msg);
-		void targetReceivedCallback(const tld_msgs::TargetConstPtr & msg);
-		void cmdReceivedCallback(const std_msgs::CharConstPtr & cmd);
+		void imageReceivedCB(const sensor_msgs::ImageConstPtr & msg);
+		void targetReceivedCB(const tld_msgs::TargetConstPtr & msg);
+		void cmdReceivedCB(const std_msgs::CharConstPtr & cmd);
 		void sendObjectTracked(int x, int y, int width, int height, float confidence);
 
 		void clearBackground();
