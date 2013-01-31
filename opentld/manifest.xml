@@ -10,8 +10,8 @@
   <url>http://ros.org/wiki/opentld</url>
 
   <export>
-	  <cpp cflags="-I${prefix}/build/git-opentld/src/libopentld -I${prefix}/build/git-opentld/src/3rdparty/cvblobs" 
-		  lflags="-L${prefix}/build/src/libopentld -L${prefix}/build/src/3rdparty/cvblobs"/>
+	  <cpp cflags="-I${prefix}/build/git-opentld/src/libopentld" 
+		  lflags="-L${prefix}/build/src/libopentld"/>
   </export>
 
 </package>
