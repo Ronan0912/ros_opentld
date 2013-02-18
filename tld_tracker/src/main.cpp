@@ -107,6 +107,10 @@ void Main::process()
 					}
 				}
 				break;
+			case STOPPED:
+					ros::Duration(1.0).sleep();
+					ROS_INFO("Tracker stopped");
+				break;
 			default:
 				break;
 		}
@@ -133,7 +137,7 @@ void Main::imageReceivedCB(const sensor_msgs::ImageConstPtr & msg)
 	try
 	{
 		if (enc::isColor(msg->encoding))
-			img_buffer_ptr = cv_bridge::toCvCopy(msg, enc::BGR8);
+			img_buffer_ptr = cv_bridge::toCvCopy(msg, enc::RGB8);
 		else
 		{
 			img_buffer_ptr = cv_bridge::toCvCopy(msg, enc::MONO8);
@@ -254,9 +258,10 @@ void Main::clearBackground()
 	}
 }
 
-void Main::clearAndStopTracking()
+void Main::stopTracking()
 {
-	tld->release();
+	state = STOPPED;
+	//tld->release();
 }
 
 void Main::toggleLearning()

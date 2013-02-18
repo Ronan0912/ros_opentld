@@ -122,7 +122,7 @@ void BaseFrame::image_receivedCB(const sensor_msgs::ImageConstPtr & msg)
 		try
 		{
 			if (enc::isColor(msg->encoding))
-				cv_ptr = cv_bridge::toCvShare(msg, enc::BGR8);
+				cv_ptr = cv_bridge::toCvShare(msg, enc::RGB8);
 			else
 				cv_ptr = cv_bridge::toCvShare(msg, enc::MONO8);
 		}
@@ -137,7 +137,7 @@ void BaseFrame::image_receivedCB(const sensor_msgs::ImageConstPtr & msg)
 		if (enc::isColor(msg->encoding))
 		{
 			image = QImage((const unsigned char*)(cv_ptr->image.data),cv_ptr->image.cols,cv_ptr->image.rows,QImage::Format_RGB888);
-			image.rgbSwapped();
+			//image.rgbSwapped();
 		}
 		else
 		{

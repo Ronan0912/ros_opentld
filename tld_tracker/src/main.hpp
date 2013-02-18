@@ -98,7 +98,8 @@ class Main
 		{
 			INIT,
 			TRACKER_INIT,
-			TRACKING
+			TRACKING,
+			STOPPED
 		} state;
 
 		bool correctBB;
