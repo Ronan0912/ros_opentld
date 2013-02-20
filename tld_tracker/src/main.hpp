@@ -130,7 +130,7 @@ class Main
 		void sendObjectTracked(int x, int y, int width, int height, float confidence);
 
 		void clearBackground();
-		void clearAndStopTracking();
+		void stopTracking();
 		void toggleLearning();
 		void alternatingMode();
 		void exportModel();
