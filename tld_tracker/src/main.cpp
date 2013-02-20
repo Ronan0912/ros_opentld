@@ -192,7 +192,7 @@ void Main::cmdReceivedCB(const std_msgs::CharConstPtr & cmd)
 			clearBackground();
 			break;
 		case 'c':
-			clearAndStopTracking();
+			stopTracking();
 			break;
 		case 'l':
 			toggleLearning();
