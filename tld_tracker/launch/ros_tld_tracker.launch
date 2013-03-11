@@ -5,7 +5,7 @@
 	<arg name="model_import_file" default="/home/tld_models/sample"/>
 	<arg name="model_export_file" default="/home/tld_models/sample"/>
 	<arg name="cascade_path" default=
-		"/opt/ros/fuerte/share/OpenCV/haarcascades/haarcascade_frontalface_alt.xml"/>
+		"$(env ROS_ROOT)/../OpenCV/haarcascades/haarcascade_frontalface_alt.xml"/>
 	<arg name="image_topic" default="im_acq"/>
 
 	<!-- Nodes -->
