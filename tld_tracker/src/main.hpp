@@ -49,8 +49,6 @@ class Main
 	public:
 		Main()
 		{
-			tld = new tld::TLD();
-
 			state = INIT;
 
 			ros::NodeHandle np("~");

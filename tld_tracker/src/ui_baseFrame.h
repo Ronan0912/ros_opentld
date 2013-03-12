@@ -167,7 +167,7 @@ public:
         importing_button->setText(QApplication::translate("BaseFrame", "Importing model", 0, QApplication::UnicodeUTF8));
         exporting_button->setText(QApplication::translate("BaseFrame", "Exporting model", 0, QApplication::UnicodeUTF8));
         alternating_button->setText(QApplication::translate("BaseFrame", "Alternating mode", 0, QApplication::UnicodeUTF8));
-        stop_tracking_button->setText(QApplication::translate("BaseFrame", "Stop tracking", 0, QApplication::UnicodeUTF8));
+        stop_tracking_button->setText(QApplication::translate("BaseFrame", "Start/Stop tracking", 0, QApplication::UnicodeUTF8));
         background_reset_button->setText(QApplication::translate("BaseFrame", "Reset background", 0, QApplication::UnicodeUTF8));
         reset_button->setText(QApplication::translate("BaseFrame", "Reset", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
