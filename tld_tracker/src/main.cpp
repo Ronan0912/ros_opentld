@@ -45,8 +45,6 @@ void Main::process()
 			case INIT:
 				if(newImageReceived())
 				{
-			        tld = new tld::TLD();
-
 					if(showOutput)
 						sendObjectTracked(0, 0, 0, 0, 0);
 					getLastImageFromBuffer();
@@ -300,8 +298,6 @@ void Main::importModel()
 void Main::reset()
 {
 	correctBB = false;
-	tld->release();
-    delete tld;
 	state = INIT;
 }
 
