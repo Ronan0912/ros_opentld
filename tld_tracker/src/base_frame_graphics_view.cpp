@@ -93,16 +93,6 @@ bool BaseFrameGraphicsView::get_correct_bb()
 	return correct_bb;
 }
 
-void BaseFrameGraphicsView::set_correct_bb(bool correct)
-{
-	if(!correct)
-		this->setCursor(Qt::CrossCursor);
-	else 
-		this->setCursor(Qt::ArrowCursor);
-
-	this->correct_bb = correct;
-}
-
 QPen * BaseFrameGraphicsView::get_pen() const
 {
 	return m_pen;
@@ -118,9 +108,28 @@ void BaseFrameGraphicsView::image_received(const QImage & img)
 	m_item_pixmap->setPixmap(QPixmap::fromImage(img));
 }
 
-void BaseFrameGraphicsView::tracked_objet_changed(QRectF rect)
+void BaseFrameGraphicsView::tracked_objet_changed(const QRectF & rect)
 {
-	this->m_item_rect->setRect(rect);        
+	//The tracker node sent a bounding box
+	if(rect.width() && rect.height())
+	{
+        if(!this->correct_bb)
+        {
+	        this->correct_bb = true;
+		    this->setCursor(Qt::ArrowCursor);
+        } 
+	}
+	//The tracker node sent a bad bouding box
+	else
+	{
+        if(this->correct_bb)
+        {
+    	    this->correct_bb = false;
+    		this->setCursor(Qt::CrossCursor);  
+    	}
+    }
+	
+    this->m_item_rect->setRect(rect);        
 }
 
 void BaseFrameGraphicsView::resizeEvent(QResizeEvent * event)

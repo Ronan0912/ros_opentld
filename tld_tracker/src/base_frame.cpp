@@ -37,7 +37,7 @@ BaseFrame::BaseFrame()
 	setupUi(this);
 
 	QObject::connect(this,SIGNAL(sig_image_received(const QImage &)),base_frame_graphics_view,SLOT(image_received(const QImage &)));    
-	QObject::connect(this,SIGNAL(sig_tracked_object_changed(QRectF)),base_frame_graphics_view,SLOT(tracked_objet_changed(QRectF)));
+	QObject::connect(this,SIGNAL(sig_tracked_object_changed(const QRectF &)),base_frame_graphics_view,SLOT(tracked_objet_changed(const QRectF &)));
 	QObject::connect(this,SIGNAL(sig_fps_tracker_changed(int)),lcd_fps_tracker,SLOT(display(int)));  
 	QObject::connect(this,SIGNAL(sig_confidence_changed(int)),confidence_bar,SLOT(setValue(int)));  
 	QObject::connect(background_reset_button,SIGNAL(clicked()),this,SLOT(clear_background()));
@@ -153,18 +153,10 @@ void BaseFrame::image_receivedCB(const sensor_msgs::ImageConstPtr & msg)
 
 void BaseFrame::tracked_objectCB(const tld_msgs::BoundingBoxConstPtr & msg)
 {
-	//The tld node sent a bounding box
-	if(msg->width && msg->height && !base_frame_graphics_view->get_correct_bb())
-	{
-		base_frame_graphics_view->set_correct_bb(true);
-		first_image = false;
-	}
-	//The tld node sent a bad bouding box
-	else if((!msg->width || !msg->height) && base_frame_graphics_view->get_correct_bb())
-	{
-		base_frame_graphics_view->set_correct_bb(false);
-		first_image = true;   
-	}
+    if(msg->width && msg->height)
+        first_image = true;
+    else
+        first_image = false;
 
 	QRectF rect(msg->x,msg->y,msg->width,msg->height);
 	emit sig_tracked_object_changed(rect);

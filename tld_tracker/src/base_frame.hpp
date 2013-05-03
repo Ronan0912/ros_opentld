@@ -70,7 +70,7 @@ class BaseFrame : public QWidget, private Ui::BaseFrame
 
 	signals:
 		void sig_image_received(const QImage & image);
-		void sig_tracked_object_changed(QRectF bb);
+		void sig_tracked_object_changed(const QRectF & bb);
 		void sig_fps_tracker_changed(int fps);
 		void sig_confidence_changed(int confidence);
 

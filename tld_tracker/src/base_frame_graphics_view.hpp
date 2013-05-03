@@ -55,7 +55,6 @@ class BaseFrameGraphicsView : public QGraphicsView
 		~BaseFrameGraphicsView();
 		QGraphicsRectItem * get_bb() const;
 		bool get_correct_bb();
-		void set_correct_bb(bool correct);
 		QPen * get_pen() const;
 		QBrush * get_brush() const;
 
@@ -80,7 +79,7 @@ class BaseFrameGraphicsView : public QGraphicsView
 
 	public slots:
 		void image_received(const QImage & img);
-		void tracked_objet_changed(QRectF rect);
+		void tracked_objet_changed(const QRectF & rect);
 
 signals:
 		void sig_bb_set(QRectF rect);
