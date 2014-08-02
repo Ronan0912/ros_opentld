@@ -110,124 +110,124 @@ void BaseFrameGraphicsView::image_received(const QImage & img)
 
 void BaseFrameGraphicsView::tracked_objet_changed(const QRectF & rect)
 {
-	//The tracker node sent a bounding box
-	if(rect.width() && rect.height())
-	{
-        if(!this->correct_bb)
-        {
-	        this->correct_bb = true;
-		    this->setCursor(Qt::ArrowCursor);
-        } 
-	}
-	//The tracker node sent a bad bouding box
-	else
-	{
-        if(this->correct_bb)
-        {
-    	    this->correct_bb = false;
-    		this->setCursor(Qt::CrossCursor);  
-    	}
+  //The tracker node sent a bounding box
+  if(rect.width() || rect.height())
+  {
+    if(!this->correct_bb)
+    {
+      this->correct_bb = true;
+      this->setCursor(Qt::ArrowCursor);
+    } 
+  }
+  //The tracker node sent a bad bouding box
+  else
+  {
+    if(this->correct_bb)
+    {
+      this->correct_bb = false;
+      this->setCursor(Qt::CrossCursor);  
     }
-	
-    this->m_item_rect->setRect(rect);        
+  }
+
+  this->m_item_rect->setRect(rect);        
 }
 
 void BaseFrameGraphicsView::resizeEvent(QResizeEvent * event)
 {
-	fitInView(this->sceneRect(), Qt::KeepAspectRatio);
-	QGraphicsView::resizeEvent(event);
+  fitInView(this->sceneRect(), Qt::KeepAspectRatio);
+  QGraphicsView::resizeEvent(event);
 }
 
 void BaseFrameGraphicsView::mousePressEvent(QMouseEvent * event)
 {
-	float scale, offset_x, offset_y;
-	this->computeScaleOffsets(scale, offset_x, offset_y);
+  float scale, offset_x, offset_y;
+  this->computeScaleOffsets(scale, offset_x, offset_y);
 
-	qDebug() << "Press X : " << (event->pos().x()-offset_x)/scale << " Y : " << (event->pos().y()-offset_y)/scale;
+  qDebug() << "Press X : " << (event->pos().x()-offset_x)/scale << " Y : " << (event->pos().y()-offset_y)/scale;
 
-	if(event->button() == Qt::LeftButton)
-	{
-		if(!correct_bb && !drag && !m_item_rect->isSelected())
-		{
-			point.setX((event->pos().x()-offset_x)/scale);
-			point.setY((event->pos().y()-offset_y)/scale);
+  if(event->button() == Qt::LeftButton)
+  {
+    if(!correct_bb && !drag && !m_item_rect->isSelected())
+    {
+      point.setX((event->pos().x()-offset_x)/scale);
+      point.setY((event->pos().y()-offset_y)/scale);
 
-			drag = true;
-		}
-	}
-	QGraphicsView::mousePressEvent(event);
+      drag = true;
+    }
+  }
+  QGraphicsView::mousePressEvent(event);
 }
 
 void BaseFrameGraphicsView::mouseMoveEvent(QMouseEvent * event)
 {
-	float scale, offset_x, offset_y;
-	this->computeScaleOffsets(scale, offset_x, offset_y);
+  float scale, offset_x, offset_y;
+  this->computeScaleOffsets(scale, offset_x, offset_y);
 
-	//    qDebug() << "Move X : " << (event->pos().x()-offset_x)/scale << " Y : " << (event->pos().y()-offset_y)/scale;
+  //    qDebug() << "Move X : " << (event->pos().x()-offset_x)/scale << " Y : " << (event->pos().y()-offset_y)/scale;
 
-	if(!correct_bb && drag && !m_item_rect->isSelected())
-	{
-		m_item_rect->setRect(point.x(), point.y(), ((event->pos().x()-offset_x)/scale) - point.x(), ((event->pos().y()-offset_y)/scale) - point.y());
-		this->update();
-	}
-	QGraphicsView::mouseMoveEvent(event);
+  if(!correct_bb && drag && !m_item_rect->isSelected())
+  {
+    m_item_rect->setRect(point.x(), point.y(), ((event->pos().x()-offset_x)/scale) - point.x(), ((event->pos().y()-offset_y)/scale) - point.y());
+    this->update();
+  }
+  QGraphicsView::mouseMoveEvent(event);
 }
 
 void BaseFrameGraphicsView::mouseReleaseEvent(QMouseEvent * event)
 {
-	float scale, offset_x, offset_y;
-	this->computeScaleOffsets(scale, offset_x, offset_y);
+  float scale, offset_x, offset_y;
+  this->computeScaleOffsets(scale, offset_x, offset_y);
 
-	qDebug() << "Release X : " << (event->pos().x()-offset_x)/scale << " Y : " << (event->pos().y()-offset_y)/scale;
+  qDebug() << "Release X : " << (event->pos().x()-offset_x)/scale << " Y : " << (event->pos().y()-offset_y)/scale;
 
-	if(event->button() == Qt::LeftButton)
-	{
-		if(!correct_bb && drag  && !m_item_rect->isSelected())
-		{
-			QRectF rect = m_item_rect->rect();
-			emit sig_bb_set(rect);
-			rect.normalized();
-			drag = false;
-		}
-	}
-	QGraphicsView::mouseReleaseEvent(event);
+  if(event->button() == Qt::LeftButton)
+  {
+    if(!correct_bb && drag  && !m_item_rect->isSelected())
+    {
+      QRectF rect = m_item_rect->rect();
+      emit sig_bb_set(rect);
+      rect.normalized();
+      drag = false;
+    }
+  }
+  QGraphicsView::mouseReleaseEvent(event);
 }
 
 /* Mathieu's function */
 void BaseFrameGraphicsView::computeScaleOffsets(float & scale, float & offsetX, float & offsetY) const
 {
-	scale = 1.0f;
-	offsetX = 0.0f;
-	offsetY = 0.0f;
+  scale = 1.0f;
+  offsetX = 0.0f;
+  offsetY = 0.0f;
 
-	float w = m_item_pixmap->pixmap().width();
-	float h = m_item_pixmap->pixmap().height();
-	float widthRatio = float(this->rect().width()) / w;
-	float heightRatio = float(this->rect().height()) / h;
+  float w = m_item_pixmap->pixmap().width();
+  float h = m_item_pixmap->pixmap().height();
+  float widthRatio = float(this->rect().width()) / w;
+  float heightRatio = float(this->rect().height()) / h;
 
-	//printf("w=%f, h=%f, wR=%f, hR=%f, sW=%d, sH=%d\n", w, h, widthRatio, heightRatio, this->rect().width(), this->rect().height());
-	if(widthRatio < heightRatio)
-	{
-		scale = widthRatio;
-	}
-	else
-	{
-		scale = heightRatio;
-	}
+  //printf("w=%f, h=%f, wR=%f, hR=%f, sW=%d, sH=%d\n", w, h, widthRatio, heightRatio, this->rect().width(), this->rect().height());
+  if(widthRatio < heightRatio)
+  {
+    scale = widthRatio;
+  }
+  else
+  {
+    scale = heightRatio;
+  }
 
-	//printf("ratio=%f\n",ratio);
+  //printf("ratio=%f\n",ratio);
 
-	w *= scale;
-	h *= scale;
+  w *= scale;
+  h *= scale;
 
-	if(w < this->rect().width())
-	{
-		offsetX = (this->rect().width() - w)/2.0f;
-	}
-	if(h < this->rect().height())
-	{
-		offsetY = (this->rect().height() - h)/2.0f;
-	}
-	//printf("offsetX=%f, offsetY=%f\n",offsetX, offsetY);
+  if(w < this->rect().width())
+  {
+    offsetX = (this->rect().width() - w)/2.0f;
+  }
+  if(h < this->rect().height())
+  {
+    offsetY = (this->rect().height() - h)/2.0f;
+  }
+  //printf("offsetX=%f, offsetY=%f\n",offsetX, offsetY);
 }
 
