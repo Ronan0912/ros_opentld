@@ -9,7 +9,7 @@
 	<arg name="image_topic" default="im_acq"/>
 
 	<!-- Nodes -->
-    <node name="ros_tld_tracker_node" pkg="tld_tracker" type="ros_tld_tracker_node"
+    <node name="ros_tld_tracker_node" pkg="tld_tracker" type="tld_tracker_node"
 	    output="screen">
         <!-- remap of topics -->
         <remap from="image" to="$(arg image_topic)"/>

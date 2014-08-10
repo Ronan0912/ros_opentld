@@ -1,9 +1,0 @@
-<stack>
-  <description brief="ROS_OpenTLD">TLD is used for tracking objects in video streams</description>
-  <author>Ronan Chauvin and Francois Ferland</author>
-  <license>BSD</license>  
-  <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/ROS_OpenTLD</url>
-  <depend stack="ros"/>
-
-</stack>

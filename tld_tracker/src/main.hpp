@@ -23,6 +23,16 @@
  *      Author: Ronan Chauvin
  */
 
+//* Main
+/**
+* State machine of OpenTLD
+* INIT
+* TRACKER_INIT
+* TRACKING
+* STOPPED
+*  
+*/
+
 #ifndef MAIN_HPP_
 #define MAIN_HPP_
 
@@ -68,11 +78,16 @@ class Main
 			np.param("height", target_bb.height, 100);
 			np.param("correctBB", correctBB, false);
 
-			pub1 = n.advertise<tld_msgs::BoundingBox>("tld_tracked_object", 1000, true);
-			pub2 = n.advertise<std_msgs::Float32>("tld_fps", 1000, true);
-			sub1 = n.subscribe("image", 1000, &Main::imageReceivedCB, this);
-			sub2 = n.subscribe("bounding_box", 1000, &Main::targetReceivedCB, this);
-			sub3 = n.subscribe("cmds", 1000, &Main::cmdReceivedCB, this);
+			pub1 = n.advertise<tld_msgs::BoundingBox>(
+                    "tld_tracked_object", 1000, true);
+			pub2 = n.advertise<std_msgs::Float32>(
+                    "tld_fps", 1000, true);
+			sub1 = n.subscribe(
+                    "image", 1000, &Main::imageReceivedCB, this);
+			sub2 = n.subscribe(
+                    "bounding_box", 1000, &Main::targetReceivedCB, this);
+			sub3 = n.subscribe(
+                    "cmds", 1000, &Main::cmdReceivedCB, this);
 
 			semaphore.lock();
 		}
@@ -85,7 +100,7 @@ class Main
 		void process();
 
 	private:
-		tld::TLD * tld;
+		tld::TLD * tld; 
 		bool showOutput;
 		bool exportModelAfterRun;
 		bool loadModel;
@@ -121,12 +136,37 @@ class Main
 		std::string face_cascade_path;
 		cv::CascadeClassifier face_cascade;
 
+        /*!
+        * \brief This function return a new image has been received
+        */
 		bool newImageReceived();
 		void getLastImageFromBuffer();
+
+        /*!
+        * \brief ROS image callback.
+        */
 		void imageReceivedCB(const sensor_msgs::ImageConstPtr & msg);
+
+        /*!
+        * \brief ROS target callback.
+        */
 		void targetReceivedCB(const tld_msgs::TargetConstPtr & msg);
+
+        /*!
+        * \brief ROS command callback.
+        */
 		void cmdReceivedCB(const std_msgs::CharConstPtr & cmd);
-		void sendObjectTracked(int x, int y, int width, int height, float confidence);
+
+        /*!
+        * \brief This function sends the tracked object as a BoudingBox message.
+        *
+        * \param x
+        * \param y
+        * \param width
+        * \param height
+        * \param confidence
+        */
+		void sendTrackedObject(int x, int y, int width, int height, float conf);
 
 		void clearBackground();
 		void stopTracking();
@@ -136,6 +176,10 @@ class Main
 		void importModel();
 		void reset();
 
+        /*!
+        * \brief This function allows to automatically initialize the target 
+        * using the OpenCV Haar-cascade detector.
+        */
 		cv::Rect faceDetection();
 };
 

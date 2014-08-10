@@ -2,7 +2,7 @@
 \mainpage
 \htmlinclude manifest.html
 
-\b rectangle_msg 
+\b tld_msgs 
 
 <!-- 
 Provide an overview of your package.

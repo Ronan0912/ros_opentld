@@ -1,12 +1,7 @@
 *~
 
-opentld/build/
-opentld/installed
-opentld/patched
-opentld/rospack_nosubdirs
 tld_msgs/build/
 tld_msgs/msg_gen/
 tld_msgs/src/tld_msgs
 tld_tracker/bin/
-tld_tracker/build/
-tld_tracker/lib
+tld_tracker/lib/

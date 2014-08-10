@@ -46,7 +46,7 @@ void Main::process()
                 if(newImageReceived())
                 {
                     if(showOutput)
-                        sendObjectTracked(0, 0, 0, 0, 0.0);
+                        sendTrackedObject(0, 0, 0, 0, 0.0);
                     getLastImageFromBuffer();
                     tld->detectorCascade->imgWidth = gray.cols;
                     tld->detectorCascade->imgHeight = gray.rows;
@@ -72,7 +72,7 @@ void Main::process()
                         target_bb = faceDetection();
                     }
 
-                    sendObjectTracked(target_bb.x,target_bb.y,target_bb.width,target_bb.height,1.0);
+                    sendTrackedObject(target_bb.x,target_bb.y,target_bb.width,target_bb.height,1.0);
 
                     ROS_INFO("Starting at %d %d %d %d\n", target_bb.x, target_bb.y, target_bb.width, target_bb.height);
 
@@ -105,11 +105,11 @@ void Main::process()
                   {
                     if(tld->currBB != NULL)
                     {
-                      sendObjectTracked(tld->currBB->x,tld->currBB->y,tld->currBB->width,tld->currBB->height,tld->currConf);
+                      sendTrackedObject(tld->currBB->x,tld->currBB->y,tld->currBB->width,tld->currBB->height,tld->currConf);
                     }
                     else
                     {
-                      sendObjectTracked(1, 1, 1, 1, 0.0);
+                      sendTrackedObject(1, 1, 1, 1, 0.0);
                     }
                   }
                 }
@@ -221,7 +221,7 @@ void Main::process()
       }
     }
 
-    void Main::sendObjectTracked(int x, int y, int width, int height, float confidence)
+    void Main::sendTrackedObject(int x, int y, int width, int height, float confidence)
     {
       tld_msgs::BoundingBox msg;
       msg.header = img_header; //Add the Header of the last image processed

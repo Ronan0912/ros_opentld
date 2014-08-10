@@ -3,7 +3,7 @@
 	<arg name="image_topic" default="im_acq"/>
 
     <!-- Nodes -->
-    <node name="ros_tld_gui_node" pkg="tld_tracker" type="ros_tld_gui_node"
+    <node name="ros_tld_gui_node" pkg="tld_tracker" type="tld_gui_node"
         output="screen">
         <remap from="image" to="$(arg image_topic)"/>
         <remap from="tracked_object" to="tld_tracked_object"/>
