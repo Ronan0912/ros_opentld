@@ -153,6 +153,8 @@ add_executable(tld_gui_node     src/tld_gui_node.cpp
 add_dependencies(tld_tracker_node opentld)
 add_dependencies(tld_tracker_node tld_msgs)
 
+add_dependencies(tld_gui_node tld_msgs)
+
 ## Specify libraries to link a library or executable target against
 target_link_libraries(tld_tracker_node
   libopentld
